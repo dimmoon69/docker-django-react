@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+
 from users.models import User
 
 
@@ -137,6 +138,10 @@ class RecipeTag(models.Model):
         ordering = ('-id',)
         verbose_name = 'Тег рецепта'
         verbose_name_plural = 'Теги рецепта'
+        constraints = (
+            models.UniqueConstraint(fields=('tag', 'recipe'),
+                                    name='unique_tag_recipes'),
+        )
 
 
 class RecipeIngredient(models.Model):

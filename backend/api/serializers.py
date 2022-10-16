@@ -2,9 +2,10 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from recipes.models import (Favorites, Follow, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
-from rest_framework import serializers
 from users.models import User
 
 
@@ -129,9 +130,11 @@ class RecipeSerializer(BaseRecipeSerializer):
             ingredient_list.append(ingredient_obj)
             if int(ingredient['amount']) <= 0:
                 raise serializers.ValidationError(
-                    'Единица измерения ингредиента должна быть больше 0')
+                    'Количество ингредиента должна быть больше 0')
         data['ingredients'] = ingredients
-
+        cooking_time = self.initial_data.get('cooking_time')
+        if int(cooking_time) < 1:
+            raise serializers.ValidationError('Время приготовления >= 1!')
         tags = self.initial_data.get('tags')
         if not tags:
             raise serializers.ValidationError({
@@ -147,12 +150,6 @@ class RecipeSerializer(BaseRecipeSerializer):
 
         return data
 
-    def validate_cooking_time(self, data):
-        cooking_time = self.initial_data.get('cooking_time')
-        if int(cooking_time) < 1:
-            raise serializers.ValidationError()
-        return data
-
     @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
@@ -165,7 +162,7 @@ class RecipeSerializer(BaseRecipeSerializer):
         for ingredient in ingredients:
             ingredient_obj = get_object_or_404(Ingredient,
                                                id=ingredient['id'])
-            RecipeIngredient.objects.get_or_create(
+            RecipeIngredient.objects.bulk_create(
                 recipe_id=recipe,
                 ingredient=ingredient_obj,
                 amount=ingredient['amount']
