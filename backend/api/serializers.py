@@ -162,11 +162,11 @@ class RecipeSerializer(BaseRecipeSerializer):
         for ingredient in ingredients:
             ingredient_obj = get_object_or_404(Ingredient,
                                                id=ingredient['id'])
-            RecipeIngredient.objects.bulk_create(
-                recipe_id=recipe,
-                ingredient=ingredient_obj,
-                amount=ingredient['amount']
-            )
+        RecipeIngredient.objects.bulk_create(
+            recipe_id=recipe,
+            ingredient=ingredient_obj,
+            amount=ingredient['amount']
+        )
 
         return recipe
 

@@ -136,4 +136,6 @@ backend_static/
 backend_media/
 
 # migrations
-migrations/
+# migrations/
+
+.isort.cfg

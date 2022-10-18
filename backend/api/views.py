@@ -21,6 +21,7 @@ from .permissions import AuthorOrReadOnly
 from .serializers import (CustomUserCreateSerializer, CustomUserSerializer,
                           FollowSerializer, IngredientSerializer,
                           RecipeSerializer, TagSerializer)
+from .utils import create_report
 
 
 class BaseRecipeViewSet(viewsets.ModelViewSet, AddDelMixin):
@@ -67,11 +68,7 @@ class RecipeViewSet(BaseRecipeViewSet):
             'ingredient__name',
             'ingredient__measurement_unit').annotate(Sum('amount'))
         shopping_cart = 'Ваш список покупок:\n\n'
-        for ingredient in ingredients:
-            shopping_cart += (
-                f'{ingredient[0].capitalize()}'
-                f' - {ingredient[2]} {ingredient[1]}\n'
-            )
+        create_report(shopping_cart, ingredients)
         filename = "shopping_cart.txt"
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename={filename}'
