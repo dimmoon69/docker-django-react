@@ -6,9 +6,9 @@ load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='some_key')
-DEBUG = False
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', default=['*']).split(" ")
+SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY', default='some_key'))
+DEBUG = bool(os.getenv('DJANGO_SECRET_KEY', default=False))
+ALLOWED_HOSTS = list(os.getenv('DJANGO_ALLOWED_HOSTS', default=['*']).split(','))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
+        "ENGINE": os.environ.get("DJANGO_POSTGRES_ENGINE", "django.db.backends.sqlite3"),
         "NAME": os.environ.get("POSTGRES_DB", os.path.join(BASE_DIR, 'db.sqlite3')),
         "USER": os.environ.get("POSTGRES_USER", "user"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "password"),
@@ -111,8 +111,8 @@ USE_TZ = True
 STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/backend_media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'backend_media')
+MEDIA_URL = '/api/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
