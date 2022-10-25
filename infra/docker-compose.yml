@@ -33,11 +33,13 @@ services:
       context: ../frontend
       dockerfile: Dockerfile
     container_name: "foodgram-ui"
+    environment:
+      WAIT-HOSTS: foodgram-db, foodgram-web
     volumes:
       - ../backend/static:/mnt/static:ro
       - ../backend/media:/mnt/media:rw
     ports:
-      - '81:80'
+      - '80:80'
     stdin_open: true
 
 
