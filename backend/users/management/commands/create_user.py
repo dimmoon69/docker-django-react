@@ -8,7 +8,7 @@ class Command(BaseCommand):
         "username": "dima",
         "email": "dima@admin.suka.top",
         "first_name": "Dima",
-        "last_name": "DIMA BLAD HUILI NE YASNO"
+        "last_name": "DIMA BLAD HUILI NE YASNO",
     }
     user_password = "123qwe!@#"
 
